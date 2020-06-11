@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # https://github.com/alleycat-at-git/monad/blob/master/python/src/monad.py
-from typing import TypeVar, Generic, Callable, Optional
+from typing import TypeVar, Generic, Callable
 
 T = TypeVar("T")
 T2 = TypeVar("T2")

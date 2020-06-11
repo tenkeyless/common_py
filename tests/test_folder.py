@@ -4,7 +4,7 @@ from typing import List
 import unittest
 
 import common_py
-from common_py.functional.either import Either, Right
+from common_py.functional.either import Either
 
 
 def create_common_base(base_folder: str) -> None:
@@ -75,52 +75,3 @@ class TestCreateFolder(unittest.TestCase):
 
         self.assertTrue(isinstance(left.left, FileExistsError))
         self.assertTrue(os.path.exists(self.folder_name))
-
-
-class TestCopyAllFile(unittest.TestCase):
-    base_folder = os.path.join("tests", "resources", "base")
-    target_folder = os.path.join("tests", "resources", "copied")
-
-    def setUp(self) -> None:
-        create_common_base(self.base_folder)
-        success_create_folder: Either[str, Exception] = common_py.create_folder(
-            self.target_folder
-        )
-        self.assertEqual(success_create_folder.right, self.target_folder)
-        self.assertTrue(os.path.exists(self.target_folder))
-
-    def tearDown(self) -> None:
-        remove_common_base(self.base_folder)
-        remove_common_base(self.target_folder)
-
-    def test_copy_all_file(self):
-        # [success] copy all file.
-        success: Either[int, Exception] = common_py.copy_all_file(
-            self.base_folder, self.target_folder
-        )
-        self.assertEqual(success.right, 4)
-        self.assertTrue(os.path.exists(self.target_folder))
-
-
-class TestMoveAllFile(unittest.TestCase):
-    base_folder = os.path.join("tests", "resources", "base")
-    target_folder = os.path.join("tests", "resources", "moved")
-
-    def setUp(self) -> None:
-        create_common_base(self.base_folder)
-        success_create_folder: Either[str, Exception] = common_py.create_folder(
-            self.target_folder
-        )
-        self.assertEqual(success_create_folder.right, self.target_folder)
-        self.assertTrue(os.path.exists(self.target_folder))
-
-    def tearDown(self) -> None:
-        remove_common_base(self.base_folder)
-        remove_common_base(self.target_folder)
-
-    def test_move_all_file(self):
-        success: Either[int, Exception] = common_py.move_all_file(
-            self.base_folder, self.target_folder
-        )
-        self.assertEqual(success.right, 4)
-        self.assertTrue(os.path.exists(self.target_folder))
