@@ -41,9 +41,11 @@ def files_in_folder(
     # hidden file filter
     if include_hidden_file is False:
         filters.append(lambda file_name: not file_name.startswith("."))
-    files: List[str] = toolz.pipe(
-        folder_name, os.listdir, curry(common_py.list_filters)(filters), list, sorted,
-    )  # type: ignore
+    filtered_function: Callable[[List[str]], List[str]] = toolz.compose_left(
+        os.listdir, curry(common_py.list_filters)(filters), list
+    )
+    files: List[str] = filtered_function(folder_name)  # type: ignore
+
     return files
 
 
@@ -62,7 +64,7 @@ def create_folder(folder_path: str, exist_ok: bool = True) -> Either[str, Except
     -------
     Either[str, Exception]
         
-        - Right(folder_path) Success.
+        - Right(str) Success. Created folder_path.
         - Left(FileExistsError) Failure. When exist_ok is False and the folder already exists.
         - Left(Exception) Failure. Failed for another reason.
 
@@ -73,35 +75,152 @@ def create_folder(folder_path: str, exist_ok: bool = True) -> Either[str, Except
     try:
         Path(folder_path).mkdir(parents=True, exist_ok=exist_ok)
         return Right(folder_path)
-    except FileExistsError:
-        return Left(FileExistsError)
-    except:
-        return Left(Exception)
+    except FileExistsError as err:
+        return Left(err)
+    except Exception as err:
+        return Left(err)
 
 
-# def move_all_file_to_folder(from_folder: str, _target_folder: str) -> None:
-#     for file in get_files_only_in_folder(from_folder):
-#         shutil.move(os.path.join(from_folder, file), _target_folder)
+def move_all_file(
+    from_folder: str, target_folder: str, overwrite: bool = True
+) -> Either[int, Exception]:
+    """
+    Move all files from `from_folder` to `target_folder`.
 
 
-# def move_overwrite_all_file_to_folder(from_folder: str, _target_folder: str) -> None:
-#     cwd = os.getcwd()
-#     for file in get_files_only_in_folder(from_folder):
-#         shutil.move(
-#             os.path.join(cwd, from_folder, file),
-#             os.path.join(cwd, _target_folder, file),
-#         )
+    Parameters
+    ----------
+    from_folder : str
+        Original folder
+    target_folder : str
+        Target folder
+    overwrite : bool
+        If this is True, the files are overwritten if they exist. by default True.
+
+    Returns
+    -------
+    Either[int, Exception]
+        
+        - Right(int) Success. Number of files moved.
+        - Left(FileNotFoundError) Failure. If there is no `from_folder` or `target_folder`.
+        - Left(Exception) Failure. Failed for another reason.
+    
+    Notes
+    -----
+    .. versionadded:: 0.1.0
+    """
+    try:
+        cwd = os.getcwd()
+        files: List[str] = files_in_folder(from_folder, include_hidden_file=True)
+        for file in files:
+            if overwrite:
+                shutil.move(
+                    os.path.join(cwd, from_folder, file),
+                    os.path.join(cwd, target_folder, file),
+                )
+            else:
+                shutil.move(os.path.join(from_folder, file), target_folder)
+        return Right(len(files))
+    except FileNotFoundError as err:
+        return Left(err)
+    except Exception as err:
+        return Left(err)
 
 
-# def copy_all_file_to_folder(from_folder: str, _target_folder: str) -> None:
-#     for file in get_files_only_in_folder(from_folder):
-#         shutil.copy2(os.path.join(from_folder, file), _target_folder)
+def copy_all_file(from_folder: str, target_folder: str) -> Either[int, Exception]:
+    """
+    Copy all files from `from_folder` to `target_folder`.
+
+    Parameters
+    ----------
+    from_folder : str
+        Original folder
+    target_folder : str
+        Target folder
+
+    Returns
+    -------
+    Either[int, Exception]
+        
+        - Right(int) Success. Number of files copied.
+        - Left(Exception) Failure. Failed for another reason.
+    
+    Notes
+    -----
+    .. versionadded:: 0.1.0
+    """
+    try:
+        files: List[str] = files_in_folder(from_folder, include_hidden_file=True)
+        for file in files:
+            shutil.copy2(os.path.join(from_folder, file), target_folder)
+        return Right(len(files))
+    except Exception as err:
+        return Left(err)
 
 
-# def remove_files(starts_with_list: List[str], target_path: str) -> None:
-#     for _file_starts_with in starts_with_list:
-#         for _file in glob.glob("{}/{}*".format(target_path, _file_starts_with)):
-#             os.remove(_file)
+def remove_all_files(target_folder: str) -> Either[int, Exception]:
+    """
+    In `target_folder`, remove all files.
+
+    Parameters
+    ----------
+    target_folder : str
+        Target folder
+
+    Returns
+    -------
+    Either[int, Exception]
+        
+        - Right(int) Success. Number of files deleted.
+        - Left(Exception) Failure. Failed for another reason.
+
+    Notes
+    -----
+    .. versionadded:: 0.1.0
+    """
+    try:
+        count = 0
+        for file in files_in_folder(target_folder, True):
+            os.remove(os.path.join(target_folder, file))
+            count += 1
+        return Right(count)
+    except Exception as err:
+        return Left(err)
+
+
+def remove_files(
+    starts_with_list: List[str], target_folder: str
+) -> Either[int, Exception]:
+    """
+    In `target_folder`, Remove files starting with those defined in `starts_with_list`.
+
+    Parameters
+    ----------
+    starts_with_list : List[str]
+        [description]
+    target_folder : str
+        [description]
+
+    Returns
+    -------
+    Either[int, Exception]
+        
+        - Right(int) Success. Number of files deleted.
+        - Left(Exception) Failure. Failed for another reason.
+
+    Notes
+    -----
+    .. versionadded:: 0.1.0
+    """
+    try:
+        count = 0
+        for starts_with in starts_with_list:
+            for file in glob.glob("{}/{}*".format(target_folder, starts_with)):
+                os.remove(file)
+                count += 1
+        return Right(count)
+    except Exception as err:
+        return Left(err)
 
 
 # def rename_files(
