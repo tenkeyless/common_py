@@ -37,12 +37,13 @@ def files_in_folder(
     .. versionadded:: 0.1.0
     """
     # file only
-    filters.append(lambda f: os.path.isfile(folder_name + "/" + f))
+    filters2: List[Callable[[str], bool]] = filters.copy()
+    filters2.append(lambda f: os.path.isfile(folder_name + "/" + f))
     # hidden file filter
     if include_hidden_file is False:
-        filters.append(lambda file_name: not file_name.startswith("."))
+        filters2.append(lambda file_name: not file_name.startswith("."))
     filtered_function: Callable[[List[str]], List[str]] = toolz.compose_left(
-        os.listdir, curry(common_py.list_filters)(filters), list
+        os.listdir, curry(common_py.list_filters)(filters2), list
     )
     files: List[str] = filtered_function(folder_name)  # type: ignore
 
@@ -212,9 +213,10 @@ def remove_files(
     -----
     .. versionadded:: 0.1.0
     """
+    starts_with_list2: List[str] = starts_with_list.copy()
     try:
         count = 0
-        for starts_with in starts_with_list:
+        for starts_with in starts_with_list2:
             for file in glob.glob("{}/{}*".format(target_folder, starts_with)):
                 os.remove(file)
                 count += 1
