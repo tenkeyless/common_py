@@ -1,8 +1,10 @@
-import unittest
-import common_py
 import os
-from typing import List
 from pathlib import Path
+from typing import List
+import unittest
+
+import common_py
+from common_py.functional.either import Either, Right
 
 
 class TestFilesInFolder(unittest.TestCase):
@@ -21,10 +23,32 @@ class TestFilesInFolder(unittest.TestCase):
         self.assertEqual(len(files), 3)
 
 
-class TestCreateFolderIfNotExist(unittest.TestCase):
-    def test_create(self):
+class TestCreateFolder(unittest.TestCase):
+    def test_create_folder_success(self):
+        # [success] create folder
         folder_name = os.path.join("tests", "resources", "a")
-        common_py.create_folder_if_not_exist(folder_name)
+        success: Either[str, Exception] = common_py.create_folder(folder_name)
+        self.assertEqual(success.right, folder_name)
         self.assertTrue(os.path.exists(folder_name))
 
+        # post processing - delete folder
         Path(folder_name).rmdir()
+        self.assertFalse(os.path.exists(folder_name))
+
+    def test_create_folder_error_if_exist(self):
+        # [success] create folder
+        folder_name = os.path.join("tests", "resources", "a")
+        success: Either[str, Exception] = common_py.create_folder(folder_name)
+        self.assertEqual(success.right, folder_name)
+        self.assertTrue(os.path.exists(folder_name))
+
+        # [failure] create folder if exist
+        left: Either[str, Exception] = common_py.create_folder(
+            folder_name, exist_ok=False
+        )
+        self.assertEqual(left.left, FileExistsError)
+        self.assertTrue(os.path.exists(folder_name))
+
+        # post processing - delete folder
+        Path(folder_name).rmdir()
+        self.assertFalse(os.path.exists(folder_name))

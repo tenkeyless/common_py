@@ -1,3 +1,4 @@
+from common_py.functional.either import Either, Right, Left
 import glob
 import os
 import re
@@ -46,7 +47,7 @@ def files_in_folder(
     return files
 
 
-def create_folder_if_not_exist(folder_path: str) -> None:
+def create_folder(folder_path: str, exist_ok: bool = True) -> Either[str, Exception]:
     """
     Create a folder if it doesn't exist.
 
@@ -54,12 +55,28 @@ def create_folder_if_not_exist(folder_path: str) -> None:
     ----------
     folder_path : str
         Folder path to create.
+    exist_ok : bool
+        Create folder if does not exist, by defaults True
     
+    Returns
+    -------
+    Either[str, Exception]
+        
+        - Right(folder_path) Success.
+        - Left(FileExistsError) Failure. When exist_ok is False and the folder already exists.
+        - Left(Exception) Failure. Failed for another reason.
+
     Notes
     -----
     .. versionadded:: 0.1.0
     """
-    Path(folder_path).mkdir(parents=True, exist_ok=True)
+    try:
+        Path(folder_path).mkdir(parents=True, exist_ok=exist_ok)
+        return Right(folder_path)
+    except FileExistsError:
+        return Left(FileExistsError)
+    except:
+        return Left(Exception)
 
 
 # def move_all_file_to_folder(from_folder: str, _target_folder: str) -> None:
