@@ -1,4 +1,15 @@
 
+### sphinx-apidoc related ###
+# $ sphinx-apidoc -o doc/source common_py/ --separate --ext-coverage -f
+# doc$ make html
+doc/*/*
+doc/source/**
+!doc/source/**.rst
+!doc/source/conf.py
+!doc/source/index.rst
+!doc/make.bat
+!doc/Makefile
+
 # Created by https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,visualstudiocode
 
