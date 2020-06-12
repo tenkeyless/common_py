@@ -7,6 +7,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   common_py.file
    common_py.folder
    common_py.list_extension
 
