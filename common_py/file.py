@@ -2,7 +2,7 @@ import glob
 import os
 import re
 import shutil
-from typing import List, Tuple, TypeVar
+from typing import List, Tuple, Callable, Optional
 
 from common_py.folder import files_in_folder
 from common_py.functional.either import Either, Left, Right, sequences
@@ -224,22 +224,61 @@ def rename_files(
     return sequences(results)
 
 
-# def rename_files(
-#     sorted_list1: List[str], sorted_list2: List[str], target_path: str
-# ) -> None:
-#     rename_files_from_list: List[Tuple[int, Tuple[str, str]]] = []
-#     _rev_current_file_names = sorted_list1
-#     for index, current_file_name in enumerate(sorted_list2):
-#         rename_files_from_list.append(
-#             (index, (current_file_name, _rev_current_file_names[index]))
-#         )
-#     for rename_files_for_prev_from_to in sorted(rename_files_from_list):
-#         for old_name in glob.glob(
-#             "{}/{}*".format(target_path, rename_files_for_prev_from_to[1][0])
-#         ):
-#             new_name = re.sub(
-#                 r"(.*)(.{6}).*\.png",
-#                 rename_files_for_prev_from_to[1][1] + r"\2.png",
-#                 os.path.basename(old_name),
-#             )
-#             os.rename(old_name, os.path.join(target_path, new_name))
+def rename_file_with_regex(
+    from_regex: str,
+    to_regex: Callable[[int], str],
+    path: str,
+    sort_f_optional: Optional[Callable[[List[str]], List[str]]] = None,
+) -> Either[List[str], Exception]:
+    """
+    In `path` folder, change file names with regex.
+
+    Even if an error occurs during the name change, the name change until the error occurs is applied.
+
+    Parameters
+    ----------
+    from_regex : str
+        
+    to_regex : Callable[[int], str]
+        [description]
+    path : str
+        File path
+    sort_f_optional : Optional[Callable[[List[str]], List[str]]], optional
+        [description], by default None
+
+    Returns
+    -------
+    Either[List[str], Exception]
+        [description]
+
+    Notes
+    -----
+    .. versionadded:: 0.1.0
+
+    Examples
+    -------
+    >>> from_regex = r"(.*)(.{3}).*\.txt"
+    >>> to_regex = (lambda counter: r"\g<1>_\g<2>"+re.escape("_{:03d}".format(counter))+".txt")
+    >>> path = self.base_folder
+    >>> sort_f = (lambda l: sorted(l, reverse=True))
+    >>> common_py.rename_file_with_regex(from_regex=from_regex, to_regex=to_regex, path=path, sort_f_optional=sort_f)
+    ["tiger_01.txt", "tile_02.txt", "robot_03.txt"]
+        -> ["tiger__01_001.txt", "tile__02_000.txt", "robot__03_002.txt"]
+    """
+    results: List[Either[str, Exception]] = []
+    try:
+        files: List[str] = files_in_folder(path)
+        files_path: List[str] = glob.glob("{}/{}*".format(path, files))
+        files_path = (
+            sorted(files_path)
+            if sort_f_optional is None
+            else sort_f_optional(files_path)
+        )
+
+        for index, file_path in enumerate(files_path):
+            new_name = re.sub(from_regex, to_regex(index), os.path.basename(file_path),)
+            os.rename(file_path, os.path.join(path, new_name))
+            results.append(Right(os.path.join(path, new_name)))
+        return sequences(results)
+    except Exception as err:
+        return Left(err)

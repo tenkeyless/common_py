@@ -1,10 +1,12 @@
 import os
 from pathlib import Path
+import re
 from typing import List
 import unittest
 
 import common_py
 from common_py.functional.either import Either
+from common_py.list_extension import compare_hashable_list
 
 
 def create_common_base(base_folder: str) -> None:
@@ -122,3 +124,48 @@ class TestRename(unittest.TestCase):
         )
         self.assertEqual(failure.right, results)
         self.assertTrue(os.path.exists(results[0]))
+
+
+class TestRenameWithRegex(unittest.TestCase):
+    base_folder = os.path.join("tests", "resources", "base")
+
+    def setUp(self) -> None:
+        create_common_base(self.base_folder)
+        success: Either[List[str], Exception] = common_py.rename_files(
+            [
+                ("tiger.txt", "tiger_01.txt"),
+                ("tile.txt", "tile_02.txt"),
+                ("robot.txt", "robot_03.txt"),
+            ],
+            self.base_folder,
+        )
+        files: List[str] = ["tiger_01.txt", "tile_02.txt", "robot_03.txt"]
+        results: List[str] = list(
+            map(lambda el: os.path.join(self.base_folder, el), files)
+        )
+        self.assertEqual(success.right, results)
+
+    def tearDown(self) -> None:
+        remove_common_base(self.base_folder)
+
+    def test_rename_files(self):
+        success: Either[List[str], Exception] = common_py.rename_file_with_regex(
+            from_regex=r"(.*)(.{3}).*\.txt",
+            to_regex=(
+                lambda counter: r"\g<1>_\g<2>"
+                + re.escape("_{:03d}".format(counter))
+                + ".txt"
+            ),
+            path=self.base_folder,
+            sort_f_optional=(lambda l: sorted(l, reverse=True)),
+        )
+        files: List[str] = [
+            "tiger__01_001.txt",
+            "tile__02_000.txt",
+            "robot__03_002.txt",
+        ]
+        results: List[str] = list(
+            map(lambda el: os.path.join(self.base_folder, el), files)
+        )
+
+        self.assertTrue(compare_hashable_list(success.right, results))
