@@ -257,8 +257,8 @@ def rename_file_with_regex(
 
     Examples
     -------
-    >>> from_regex = r"(.*)(.{3}).*\.txt"
-    >>> to_regex = (lambda counter: r"\g<1>_\g<2>"+re.escape("_{:03d}".format(counter))+".txt")
+    >>> from_regex = "(.*)(.{3}).*\\.txt"
+    >>> to_regex = (lambda counter: "\\g<1>_\\g<2>"+re.escape("_{:03d}".format(counter))+".txt")
     >>> path = self.base_folder
     >>> sort_f = (lambda l: sorted(l, reverse=True))
     >>> common_py.rename_file_with_regex(from_regex=from_regex, to_regex=to_regex, path=path, sort_f_optional=sort_f)

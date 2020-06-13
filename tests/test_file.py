@@ -152,7 +152,7 @@ class TestRenameWithRegex(unittest.TestCase):
         success: Either[List[str], Exception] = common_py.rename_file_with_regex(
             from_regex=r"(.*)(.{3}).*\.txt",
             to_regex=(
-                lambda counter: r"\g<1>_\g<2>"
+                lambda counter: "\\g<1>_\\g<2>"
                 + re.escape("_{:03d}".format(counter))
                 + ".txt"
             ),
