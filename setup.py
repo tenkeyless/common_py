@@ -75,7 +75,7 @@ setuptools.setup(
     classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3.7",
-        "License :: MIT License",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: MacOS",
         "Operating System :: Unix",
     ],
