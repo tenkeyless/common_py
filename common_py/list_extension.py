@@ -104,6 +104,10 @@ def list_diff(f: List[T], t: List[T]) -> List[T]:
     List[T]
         Difference between lists
 
+    Notes
+    -----
+    .. versionadded:: 0.1.1
+
     Examples
     --------
     >>> common_py.list_diff([1,2,3,4], [1,2,3])
@@ -132,7 +136,11 @@ def list_intersection(f: List[T], t: List[T]) -> List[T]:
     Returns
     -------
     List[T]
-        [description]
+        Common list between lists
+    
+    Notes
+    -----
+    .. versionadded:: 0.1.1
 
     Examples
     --------

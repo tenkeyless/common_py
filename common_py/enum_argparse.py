@@ -24,6 +24,10 @@ class ArgTypeMixin(Enum):
     >>> parser.add_argument('--overflow_process', default=OverflowProcess.discard, type=OverflowProcess, choices=OverflowProcess)
     >>> args = parser.parse_args()
     >>> overflow_process: OverflowProcess = OverflowProcess(args.overflow_process)
+
+    Notes
+    -----
+    .. versionadded:: 0.1.1
     """
 
     @classmethod

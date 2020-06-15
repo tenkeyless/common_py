@@ -22,5 +22,9 @@ def get_or_else(
     -------
     Optional[T]
         If `default_value_optional` is not specified, None is returned if there is no value.
+    
+    Notes
+    -----
+    .. versionadded:: 0.1.1
     """
     return dictionary.get(key, default_value_optional)
