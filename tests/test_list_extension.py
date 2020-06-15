@@ -1,7 +1,7 @@
+from typing import Callable, List
 import unittest
+
 import common_py
-import os
-from typing import List, Callable
 
 
 class TestListFilters(unittest.TestCase):
