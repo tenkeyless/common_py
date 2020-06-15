@@ -2,7 +2,7 @@ import glob
 import os
 import re
 import shutil
-from typing import List, Tuple, Callable, Optional
+from typing import Callable, List, Optional, Tuple
 
 from common_py.folder import files_in_folder
 from common_py.functional.either import Either, Left, Right, sequences

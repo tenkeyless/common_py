@@ -1,5 +1,5 @@
-from typing import Callable, List, TypeVar
 from collections import Counter
+from typing import Callable, List, TypeVar
 
 T = TypeVar("T")
 
@@ -86,3 +86,59 @@ def compare_orderable_list(s: List[S], t: List[T]) -> bool:
     https://stackoverflow.com/questions/7828867/how-to-efficiently-compare-two-unordered-lists-not-sets-in-python
     """
     return sorted(s) == sorted(t)
+
+
+def list_diff(f: List[T], t: List[T]) -> List[T]:
+    """
+    Returns a list of the differences between lists without duplicate elements.
+
+    Parameters
+    ----------
+    f : List[T]
+        List 1
+    t : List[T]
+        List 2
+
+    Returns
+    -------
+    List[T]
+        Difference between lists
+
+    Examples
+    --------
+    >>> common_py.list_diff([1,2,3,4], [1,2,3])
+    [4]
+    >>> common_py.list_diff([1,2,3], [1,2,3,4])
+    []
+    >>> common_py.list_diff([1,2,3,4,4], [1,2,3])
+    [4]
+    >>> common_py.list_diff([1,2,3,4,4], [1,2,3,3,3])
+    [4]
+    """
+    return list(set(f) - set(t))
+
+
+def list_intersection(f: List[T], t: List[T]) -> List[T]:
+    """
+    Returns a common list between lists without duplicate elements.
+
+    Parameters
+    ----------
+    f : List[T]
+        List 1
+    t : List[T]
+        List 2
+
+    Returns
+    -------
+    List[T]
+        [description]
+
+    Examples
+    --------
+    >>> common_py.list_intersection([1,2,3], [1,5,9,2])
+    [1, 2]
+    >>> common_py.list_intersection([1,2,3,3,3,2], [1,5,9,2])
+    [1, 2]
+    """
+    return list(set(f).intersection(t))
