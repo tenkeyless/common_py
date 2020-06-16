@@ -1,7 +1,7 @@
 # https://github.com/alleycat-at-git/monad/blob/master/python/src/future.py
-from common_py.functional import Monad
-from common_py.functional.option import nil, Some
-from common_py.functional.either import Either, Left, Right
+from common_py.monad import Monad
+from common_py.option import nil, Some
+from common_py.either import Either, Left, Right
 from functools import reduce
 import threading
 

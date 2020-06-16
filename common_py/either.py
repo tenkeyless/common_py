@@ -2,7 +2,7 @@ from __future__ import annotations
 
 # https://github.com/alleycat-at-git/monad/blob/master/python/src/either.py
 from typing import TypeVar, Generic, Callable, Optional, List
-from common_py.functional.monad import Monad
+from common_py.monad import Monad
 
 
 R = TypeVar("R")

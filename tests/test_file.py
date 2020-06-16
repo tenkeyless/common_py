@@ -5,7 +5,7 @@ from typing import List
 import unittest
 
 import common_py
-from common_py.functional.either import Either
+from common_py.either import Either
 from common_py.list_extension import compare_hashable_list
 
 

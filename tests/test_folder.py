@@ -4,7 +4,7 @@ from typing import List
 import unittest
 
 import common_py
-from common_py.functional.either import Either
+from common_py.either import Either
 
 
 def create_common_base(base_folder: str) -> None:
