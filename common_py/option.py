@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # https://github.com/alleycat-at-git/monad/blob/master/python/src/option.py
-from common_py.functional import Monad
+from common_py.monad import Monad
 from typing import TypeVar, Generic, Callable, Optional
 
 S = TypeVar("S")
