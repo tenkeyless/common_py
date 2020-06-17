@@ -1,13 +1,13 @@
 from __future__ import annotations
+from typing import Callable, Generic, Optional, TypeVar
 
-# https://github.com/alleycat-at-git/monad/blob/master/python/src/option.py
-from common_py.monad import Monad
-from typing import TypeVar, Generic, Callable, Optional
+from .monad import Monad
 
 S = TypeVar("S")
 S2 = TypeVar("S2")
+X = TypeVar("X")
 
-
+# https://github.com/alleycat-at-git/monad/blob/master/python/src/future.py
 class Option(Monad, Generic[S]):
     def __init__(self, value: Optional[S]):
         self.value: Optional[S] = value
@@ -23,6 +23,12 @@ class Option(Monad, Generic[S]):
             return f(self.value)
         else:
             return nil
+
+    def fold(self, fa: Callable[[S], X], default: X) -> X:
+        if self.value is not None:
+            return fa(self.value)
+        else:
+            return default
 
 
 class Some(Option):

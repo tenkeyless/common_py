@@ -6,7 +6,7 @@ import toolz
 from toolz import curry
 
 import common_py
-from common_py.either import Either, Left, Right
+from common_py.functional.either import Either, Left, Right
 
 
 def files_in_folder(
