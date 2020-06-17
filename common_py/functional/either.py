@@ -1,16 +1,14 @@
 from __future__ import annotations
+from typing import Callable, Generic, List, Optional, TypeVar
 
-# https://github.com/alleycat-at-git/monad/blob/master/python/src/either.py
-from typing import TypeVar, Generic, Callable, Optional, List
-from common_py.monad import Monad
-
+from .monad import Monad
 
 R = TypeVar("R")
 R2 = TypeVar("R2")
 L = TypeVar("L")
 X = TypeVar("X")
 
-
+# https://github.com/alleycat-at-git/monad/blob/master/python/src/either.py
 class Either(Monad, Generic[R, L]):
     def __init__(self, right: Optional[R], left: Optional[L]):
         self.right: R = right

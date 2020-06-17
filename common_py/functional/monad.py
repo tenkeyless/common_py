@@ -1,12 +1,10 @@
 from __future__ import annotations
-
-# https://github.com/alleycat-at-git/monad/blob/master/python/src/monad.py
-from typing import TypeVar, Generic, Callable
+from typing import Callable, Generic, TypeVar
 
 T = TypeVar("T")
 T2 = TypeVar("T2")
 
-
+# https://github.com/alleycat-at-git/monad/blob/master/python/src/monad.py
 class Monad(Generic[T]):
     # pure :: a -> M a
     @staticmethod

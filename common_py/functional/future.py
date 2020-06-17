@@ -1,11 +1,12 @@
-# https://github.com/alleycat-at-git/monad/blob/master/python/src/future.py
-from common_py.monad import Monad
-from common_py.option import nil, Some
-from common_py.either import Either, Left, Right
+from __future__ import annotations
 from functools import reduce
 import threading
 
+from .either import Either, Left, Right
+from .monad import Monad
+from .option import Some, nil
 
+# https://github.com/alleycat-at-git/monad/blob/master/python/src/future.py
 class Future(Monad):
     # __init__ :: ((Either err a -> void) -> void) -> Future (Either err a)
     def __init__(self, f):

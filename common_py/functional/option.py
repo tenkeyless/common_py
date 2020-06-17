@@ -1,13 +1,12 @@
 from __future__ import annotations
+from typing import Callable, Generic, Optional, TypeVar
 
-# https://github.com/alleycat-at-git/monad/blob/master/python/src/option.py
-from common_py.monad import Monad
-from typing import TypeVar, Generic, Callable, Optional
+from .monad import Monad
 
 S = TypeVar("S")
 S2 = TypeVar("S2")
 
-
+# https://github.com/alleycat-at-git/monad/blob/master/python/src/future.py
 class Option(Monad, Generic[S]):
     def __init__(self, value: Optional[S]):
         self.value: Optional[S] = value

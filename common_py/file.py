@@ -5,7 +5,7 @@ import shutil
 from typing import Callable, List, Optional, Tuple
 
 from common_py.folder import files_in_folder
-from common_py.either import Either, Left, Right, sequences
+from common_py.functional.either import Either, Left, Right, sequences
 
 
 def move_all_file(
