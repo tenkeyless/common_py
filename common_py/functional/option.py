@@ -5,6 +5,7 @@ from .monad import Monad
 
 S = TypeVar("S")
 S2 = TypeVar("S2")
+X = TypeVar("X")
 
 # https://github.com/alleycat-at-git/monad/blob/master/python/src/future.py
 class Option(Monad, Generic[S]):
@@ -22,6 +23,12 @@ class Option(Monad, Generic[S]):
             return f(self.value)
         else:
             return nil
+
+    def fold(self, fa: Callable[[S], X], default: X) -> X:
+        if self.value is not None:
+            return fa(self.value)
+        else:
+            return default
 
 
 class Some(Option):
