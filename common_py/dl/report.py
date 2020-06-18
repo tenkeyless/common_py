@@ -241,10 +241,14 @@ def post_training_success_via_slack(
     loss_list: List[float],
     val_acc_list: List[float],
     val_loss_list: List[float],
-    apply_cb_early_stopping_after: int,
-    image_sftp_info_optional: Optional[SftpServerInfo],
-    image__local_path__sftp_remote_path__tuple_optional: Optional[Tuple[str, str]],
-    image__loss_plot_file__acc_plot_file__tuple_optional: Optional[Tuple[str, str]],
+    apply_cb_early_stopping_after: int = 0,
+    image_sftp_info_optional: Optional[SftpServerInfo] = None,
+    image__local_path__sftp_remote_path__tuple_optional: Optional[
+        Tuple[str, str]
+    ] = None,
+    image__loss_plot_file__acc_plot_file__tuple_optional: Optional[
+        Tuple[str, str]
+    ] = None,
 ):
     """
     Send an training success message using Slack.
@@ -274,13 +278,13 @@ def post_training_success_via_slack(
     val_loss_list : List[float]
         List of validation loss values on training.
     apply_cb_early_stopping_after : int
-        Callback works after `apply_cb_early_stopping_after`.
+        Callback works after `apply_cb_early_stopping_after`. by default 0
     image_sftp_info_optional : Optional[SftpServerInfo]
-        Sftp Server Information.
+        Sftp Server Information. by default None
     image__local_path__sftp_remote_path__tuple_optional : Optional[Tuple[str, str]]
-        Local path and Remote Path for images.
+        Local path and Remote Path for images. by default None
     image__loss_plot_file__acc_plot_file__tuple_optional : Optional[Tuple[str, str]]
-        Image file names for loss and acc plot graphs.
+        Image file names for loss and acc plot graphs. by default None
     
     Notes
     -----
