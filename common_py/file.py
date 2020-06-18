@@ -238,18 +238,18 @@ def rename_file_with_regex(
     Parameters
     ----------
     from_regex : str
-        
+        Regex to select files to rename.
     to_regex : Callable[[int], str]
-        [description]
+        Regex function `(counter: int) -> name`. Using this regex, file names will be changed.
     path : str
         File path
     sort_f_optional : Optional[Callable[[List[str]], List[str]]], optional
-        [description], by default None
+        Sort function if necessary, by default None
 
     Returns
     -------
     Either[List[str], Exception]
-        [description]
+        Either List for rename results.
 
     Notes
     -----

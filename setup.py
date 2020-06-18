@@ -43,9 +43,7 @@ class CleanCommand(setuptools.Command):
 
 setup_requires = []
 
-requirements = [
-    ("toolz", "0.10.0"),
-]
+requirements = [("toolz", "0.10.0"), ("matplotlib", "3.1.1"), ("paramiko", "2.7.1")]
 
 install_requires = toolz.pipe(
     requirements,
