@@ -6,6 +6,27 @@ import paramiko
 
 
 class SftpServerInfo:
+    """
+    A Structure which has informations for ftp server.
+
+    Attributes
+    ----------
+    host_name : str
+        Host name for sftp server. 
+        Should not include like "sftp://", "http://", "https://" etc.
+        ex) test.commonpy.net
+    host_port : int
+        22
+    username : str
+        User name which can access to sftp server.
+    password : str
+        Password for username.
+
+    Notes
+    -----
+    .. versionadded:: 0.1.4
+    """
+
     def __init__(self, host_name: str, host_port: int, username: str, password: str):
         self.host_name: str = host_name
         self.host_port: int = host_port
@@ -71,7 +92,7 @@ def upload_file(
     Examples
     --------
     >>> sftp_server_info = SftpServerInfo("sftp.server.address", 22, "username", "password")
-    >>> default_upload_file(sftp_server_info, "014_01_16_linear.png", "..", os.path.join("web", "images"))
+    >>> upload_file(sftp_server_info, "014_01_16_linear.png", "..", os.path.join("web", "images"))
     """
     try:
         t = __connect(sftp_server_info)
@@ -117,8 +138,10 @@ def upload_files(
 
     Examples
     --------
+    >>> import os
+    >>> from common_py.sftp import *
     >>> sftp_server_info = SftpServerInfo("sftp.server.address", 22, "username", "password")
-    >>> default_upload_files(sftp_server_info, ["014_01_16_linear.png"], "..", os.path.join("web", "images"))
+    >>> upload_files(sftp_server_info, ["014_01_16_linear.png"], "..", os.path.join("web", "images"))
     """
     try:
         t = __connect(sftp_server_info)
